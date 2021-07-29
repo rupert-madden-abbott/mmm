@@ -1,0 +1,13 @@
+### Get a random word
+GET localhost:8081
+
+### Create a new game
+POST localhost:8080/games
+
+> {% client.global.set("gameId", response.body); %}
+
+### Play the created game
+POST localhost:8080/games/{{gameId}}
+Content-Type: application/json
+
+"a"

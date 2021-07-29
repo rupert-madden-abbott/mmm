@@ -1,0 +1,31 @@
+version: '3.4'
+
+x-logging:
+  &log-with-name
+  driver: "json-file"
+  options:
+    tag: "{{.ImageName}}"
+
+services:
+  game:
+    logging: *log-with-name
+    image: "game:1.0-SNAPSHOT"
+    ports: ["8080:8080"]
+    environment: ["SPRING_PROFILES_ACTIVE=json-logs" ]
+  words:
+    logging: *log-with-name
+    image: "words:1.0-SNAPSHOT"
+    ports: ["8081:8080"]
+    environment: ["SPRING_PROFILES_ACTIVE=json-logs" ]
+  prometheus:
+    build: "prometheus"
+    ports: [ "9090:9090" ]
+  promtail:
+    build: "promtail"
+    volumes:
+      - /var/lib/docker/containers:/containers
+  loki:
+    image: "grafana/loki:2.2.1"
+  grafana:
+    build: "grafana"
+    ports: ["3000:3000"]
